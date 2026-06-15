@@ -1,0 +1,4 @@
+{
+  "nav": { "home": "Home", "blog": "Blog", "about": "About" },
+  "blog": { "readMore": "Read more", "minRead": "min read" }
+}
