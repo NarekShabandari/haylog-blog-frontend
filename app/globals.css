@@ -19,16 +19,35 @@
     --foreground: #ededed;
   }
 } */
+@layer base {
+  :root {
+    color-scheme: light;
+    --bg: var(--color-bg);
+    --surface: var(--color-surface);
+    --subtle: var(--color-subtle);
+    --border: var(--color-border);
+    --text: var(--color-text);
+    --muted: var(--color-muted);
+  }
 
-body {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  .dark {
+    color-scheme: dark;
+    --bg: var(--color-bg-dark);
+    --surface: var(--color-surface-dark);
+    --subtle: var(--color-subtle-dark);
+    --border: var(--color-border-dark);
+    --text: var(--color-text-dark);
+    --muted: var(--color-muted-dark);
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-/* code,
+  /* code,
 pre,
 kbd {
   font-family: var(--font-mono);
@@ -52,13 +71,14 @@ kbd {
     overflow-x: auto;
   } */
 
-:lang(hy) {
-  font-family: var(--font-armenian);
-  line-height: 1.8;
-  word-spacing: 0.05em;
-}
+  :lang(hy) {
+    font-family: var(--font-armenian);
+    line-height: 1.8;
+    word-spacing: 0.05em;
+  }
 
-:lang(hy) code,
-:lang(hy) pre {
-  font-family: var(--font-mono);
+  :lang(hy) code,
+  :lang(hy) pre {
+    font-family: var(--font-mono);
+  }
 }
