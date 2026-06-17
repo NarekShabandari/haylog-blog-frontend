@@ -1,12 +1,12 @@
 // app/[locale]/page.tsx
 
-import { BlogGrid } from "@/components/blog/blogGrid";
 import { MainSection } from "@/components/layout/mainSection";
 
 export default function HomePage() {
   return (
     <MainSection>
-      <BlogGrid posts={posts} />
+      <div></div>
+      {/* <BlogGrid posts={posts} /> */}
     </MainSection>
   );
 }

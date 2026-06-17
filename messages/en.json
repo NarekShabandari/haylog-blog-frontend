@@ -1,4 +1,4 @@
 {
-  "nav": { "home": "Home", "blog": "Blog", "about": "About" },
+  "nav": { "home": "Home", "blog": "Blog", "about": "About", "tags": "Tags" },
   "blog": { "readMore": "Read more", "minRead": "min read" }
 }
