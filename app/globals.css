@@ -1,28 +1,38 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), monospace;
   --font-armenian: var(--font-noto-armenian), sans-serif;
+
+  /* Brand */
+  --color-accent: #6c63ff;
+  --color-accent-dark: #534ab7;
+  --color-accent-tint: #eeedfe;
+
+  /* Light mode */
+  --color-bg: #f8f8fc;
+  --color-surface: #ffffff;
+  --color-subtle: #f4f4fc;
+  --color-border: #e2e2ee;
+  --color-text: #0f0f14;
+  --color-muted: #5a5a72;
+
+  /* Dark mode */
+  --color-bg-dark: #0f0f14;
+  --color-surface-dark: #16161e;
+  --color-subtle-dark: #1e1e2a;
+  --color-border-dark: #2a2a3a;
+  --color-text-dark: #f0f0ff;
+  --color-muted-dark: #9898b8;
 }
 
-@plugin "@tailwindcss/typography";
-
-/* :root {
-  --background: #ffffff;
-  --foreground: #171717;
-} */
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
 @layer base {
   :root {
     color-scheme: light;
     --bg: var(--color-bg);
+    --accent: var(--color-accent);
     --surface: var(--color-surface);
     --subtle: var(--color-subtle);
     --border: var(--color-border);
@@ -33,6 +43,7 @@
   .dark {
     color-scheme: dark;
     --bg: var(--color-bg-dark);
+    --accent: var(--color-accent);
     --surface: var(--color-surface-dark);
     --subtle: var(--color-subtle-dark);
     --border: var(--color-border-dark);

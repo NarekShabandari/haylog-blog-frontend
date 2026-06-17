@@ -4,10 +4,9 @@ import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState<boolean>(false);
 
   useEffect(() => {
-    // On mount, read saved preference
     const saved = localStorage.getItem("theme");
     const prefersDark = window.matchMedia(
       "(prefers-color-scheme: dark)",
@@ -28,7 +27,7 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label="Toggle theme"
-      className="w-9 h-9 flex items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--subtle)] text-[var(--muted)] hover:text-[var(--text)] transition-colors"
+      className="w-9 h-9 cursor-pointer flex items-center justify-center rounded-lg border border-(--border) bg-(--subtle) text-(--muted) hover:text-(--text) transition-colors"
     >
       {dark ? <Sun size={16} /> : <Moon size={16} />}
     </button>
