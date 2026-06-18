@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { apiClient } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 
 export const postKeys = {
@@ -11,7 +11,10 @@ export const postKeys = {
 export function usePosts(params?: { category?: string; search?: string }) {
   return useQuery({
     queryKey: postKeys.list(params ?? {}),
-    queryFn: () => api.posts.getAll(params),
+    queryFn: async () => {
+      const { data } = await apiClient.get("/posts", { params });
+      return data.posts;
+    },
     staleTime: 60_000,
   });
 }
@@ -19,15 +22,10 @@ export function usePosts(params?: { category?: string; search?: string }) {
 export function usePost(slug: string) {
   return useQuery({
     queryKey: postKeys.detail(slug),
-    queryFn: () => api.posts.getBySlug(slug),
+    queryFn: async () => {
+      const { data } = await apiClient.get(`/posts/${slug}`);
+      return data.post;
+    },
     enabled: !!slug,
-  });
-}
-
-export function useCategories() {
-  return useQuery({
-    queryKey: ["categories"],
-    queryFn: api.categories.getAll,
-    staleTime: Infinity,
   });
 }
