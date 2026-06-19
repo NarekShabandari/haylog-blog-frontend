@@ -3,11 +3,19 @@ import { BlogCard } from "./blogCard";
 interface Post {
   slug: string;
   title: string;
-  excerpt: string;
-  coverImage: string;
-  category: string;
-  readTime: number;
-  date: string;
+  cover_image: string;
+  author: string;
+  author_id: string;
+  content: string;
+  content_hy: string;
+  created_at: string;
+  id: string;
+  meta_description: string;
+  meta_description_hy: string;
+  published: boolean;
+  tags: string[];
+  title_hy: string;
+  updated_at: string;
 }
 
 export function BlogGrid({ posts }: { posts: Post[] }) {
