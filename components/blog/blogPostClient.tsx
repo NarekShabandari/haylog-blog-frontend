@@ -3,6 +3,10 @@
 import { usePost } from "@/hooks/queries/usePosts";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
 import { MainSection } from "../layout/mainSection";
 
 interface Props {
@@ -23,13 +27,12 @@ export function BlogPostClient({ slug, locale }: Props) {
   return (
     <MainSection narrow>
       <article>
-        {/* Tags */}
         {post.tags?.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="font-mono text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-accent-tint text-accent-dark"
+                className="font-mono text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-[var(--color-accent-tint)] text-[var(--color-accent-dark)]"
               >
                 {tag}
               </span>
@@ -37,33 +40,27 @@ export function BlogPostClient({ slug, locale }: Props) {
           </div>
         )}
 
-        {/* Title */}
-        <h1 className="text-4xl font-bold tracking-tight text-(--text) leading-tight mb-4">
+        <h1 className="text-4xl font-bold tracking-tight text-[var(--text)] leading-tight mb-4">
           {title}
         </h1>
 
-        {/* Meta */}
-        <div className="flex items-center gap-4 mb-8 pb-8 border-b border-(--border)">
-          <div className="w-9 h-9 rounded-full bg-accent-tint flex items-center justify-center font-bold text-sm text-accent">
+        <div className="flex items-center gap-4 mb-8 pb-8 border-b border-[var(--border)]">
+          <div className="w-9 h-9 rounded-full bg-[var(--color-accent-tint)] flex items-center justify-center font-bold text-sm text-[var(--color-accent)]">
             {post.author?.[0]?.toUpperCase()}
           </div>
           <div>
-            <p className="text-sm font-medium text-(--text)">{post.author}</p>
-            <p className="font-mono text-xs text-(--muted)">
+            <p className="text-sm font-medium text-[var(--text)]">
+              {post.author}
+            </p>
+            <p className="font-mono text-xs text-[var(--muted)]">
               {new Date(post.created_at).toLocaleDateString(
                 isHy ? "hy-AM" : "en-US",
                 { year: "numeric", month: "long", day: "numeric" },
-              )}
-              {post.updated_at !== post.created_at && (
-                <span className="ml-2 opacity-60">
-                  · updated {new Date(post.updated_at).toLocaleDateString()}
-                </span>
               )}
             </p>
           </div>
         </div>
 
-        {/* Cover image */}
         {post.cover_image && (
           <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-10">
             <Image
@@ -76,19 +73,29 @@ export function BlogPostClient({ slug, locale }: Props) {
           </div>
         )}
 
-        {/* Content */}
+        {/* Markdown content — properly rendered */}
         <div
           className="prose prose-lg max-w-none
-            prose-headings:font-sans prose-headings:tracking-tight prose-headings:text-(--text)
-            prose-p:text-(--muted) prose-p:leading-relaxed
-            prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-            prose-code:font-mono prose-code:text-accent
-            prose-pre:bg-(--subtle) prose-pre:border prose-pre:border-(--border)
-            prose-img:rounded-xl prose-img:border prose-img:border-(--border)
-            prose-strong:text-(--text)
+            prose-headings:font-sans prose-headings:tracking-tight prose-headings:text-[var(--text)]
+            prose-headings:scroll-mt-24
+            prose-p:text-[var(--muted)] prose-p:leading-relaxed
+            prose-a:text-[var(--color-accent)] prose-a:no-underline hover:prose-a:underline
+            prose-code:font-mono prose-code:text-[var(--color-accent)] prose-code:before:content-none prose-code:after:content-none
+            prose-pre:bg-[var(--subtle)] prose-pre:border prose-pre:border-[var(--border)] prose-pre:rounded-xl
+            prose-img:rounded-xl prose-img:border prose-img:border-[var(--border)]
+            prose-strong:text-[var(--text)]
+            prose-blockquote:border-l-[var(--color-accent)] prose-blockquote:text-[var(--muted)]
+            prose-li:text-[var(--muted)]
+            prose-hr:border-[var(--border)]
             dark:prose-invert"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
+        >
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeHighlight, rehypeSlug]}
+          >
+            {content}
+          </ReactMarkdown>
+        </div>
       </article>
     </MainSection>
   );
@@ -98,15 +105,15 @@ function PostSkeleton() {
   return (
     <MainSection narrow>
       <div className="animate-pulse space-y-4">
-        <div className="h-4 w-24 bg-(--subtle) rounded-full" />
-        <div className="h-10 w-3/4 bg-(--subtle) rounded-lg" />
-        <div className="h-4 w-1/3 bg-(--subtle) rounded-lg" />
-        <div className="h-64 w-full bg-(--subtle) rounded-xl" />
+        <div className="h-4 w-24 bg-[var(--subtle)] rounded-full" />
+        <div className="h-10 w-3/4 bg-[var(--subtle)] rounded-lg" />
+        <div className="h-4 w-1/3 bg-[var(--subtle)] rounded-lg" />
+        <div className="h-64 w-full bg-[var(--subtle)] rounded-xl" />
         <div className="space-y-3 pt-4">
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="h-4 bg-(--subtle) rounded"
+              className="h-4 bg-[var(--subtle)] rounded"
               style={{ width: `${90 - i * 5}%` }}
             />
           ))}
