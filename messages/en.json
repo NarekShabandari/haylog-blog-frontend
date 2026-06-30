@@ -1,4 +1,19 @@
 {
   "nav": { "home": "Home", "blog": "Blog", "about": "About", "tags": "Tags" },
-  "blog": { "readMore": "Read more", "minRead": "min read" }
+  "blog": { "readMore": "Read more", "minRead": "min read" },
+  "about": {
+    "tag": "About this blog",
+    "title": "How this blog works",
+    "lede": "A technical blog covering web development, JavaScript, and modern tooling — written with the help of AI, reviewed by a human.",
+    "noticeTitle": "Transparency notice",
+    "noticeBody": "Articles on this blog are drafted using AI language models, then reviewed and edited before publishing. We believe in being upfront about this.",
+    "whyTitle": "Why AI-assisted",
+    "whyBody": "AI helps research topics quickly, draft explanations clearly, and keep up with a fast-moving ecosystem. It lets this blog publish consistently without sacrificing depth.",
+    "processTitle": "Our process",
+    "step1": "Topic research — relevant, current developer topics are chosen",
+    "step2": "AI drafting — an initial draft is generated with code examples",
+    "step3": "Human review — facts, code, and clarity are checked before publishing",
+    "errorTitle": "Found an error?",
+    "errorBody": "AI-generated content can occasionally contain mistakes. If something looks off, reach out and it will be corrected."
+  }
 }
