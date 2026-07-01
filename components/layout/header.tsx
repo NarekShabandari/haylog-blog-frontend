@@ -18,8 +18,7 @@ export function Header() {
 
         <nav className="hidden md:flex items-center gap-6">
           {[
-            { href: "/blog", label: t("blog") },
-            { href: "/tags", label: t("tags") },
+            { href: "/", label: t("blog") },
             { href: "/about", label: t("about") },
           ].map(({ href, label }) => (
             <Link
