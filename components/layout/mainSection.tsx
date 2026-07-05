@@ -13,7 +13,7 @@ export function MainSection({
     <main
       className={`
         w-full mx-auto px-4 sm:px-6 py-12
-        ${narrow ? "max-w-3xl" : "max-w-6xl"}
+        ${narrow ? "max-w-4xl" : "max-w-6xl"}
         ${className}
       `}
     >

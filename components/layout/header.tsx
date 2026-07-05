@@ -13,7 +13,7 @@ export function Header() {
           href="/"
           className="text-lg font-bold tracking-tight text-(--text)"
         >
-          <span className="text-(--accent)">Main</span> Thread
+          <span className="text-(--accent)">Call</span> Stack
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">

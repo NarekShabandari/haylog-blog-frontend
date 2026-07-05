@@ -32,7 +32,7 @@ export function BlogPostClient({ slug, locale }: Props) {
             {post.tags.map((tag: string) => (
               <span
                 key={tag}
-                className="font-mono text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border border-[var(--color-accent-dark)] text-[var(--color-accent-dark)]"
+                className="font-mono text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border border-accent-dark text-accent-dark"
               >
                 {tag}
               </span>
@@ -45,7 +45,7 @@ export function BlogPostClient({ slug, locale }: Props) {
         </h1>
 
         <div className="flex items-center gap-4 mb-8 pb-8 border-b border-(--border)">
-          <div className="w-9 h-9 rounded-full bg-[var(--color-accent-tint)] flex items-center justify-center font-bold text-sm text-accent">
+          <div className="w-9 h-9 rounded-full bg-accent-tint flex items-center justify-center font-bold text-sm text-accent">
             {post.author?.[0]?.toUpperCase()}
           </div>
           <div>
