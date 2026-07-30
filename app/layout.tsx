@@ -1,7 +1,4 @@
-import { QueryProvider } from "@/providers/QueryProvider";
 import type { Metadata } from "next";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
 import {
   JetBrains_Mono,
   Noto_Sans_Armenian,
@@ -37,24 +34,14 @@ export const metadata: Metadata = {
 
 export default async function LocaleLayout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }>) {
-  const messages = await getMessages();
-  const { locale } = await params;
-
   return (
     <html
-      lang={locale}
       className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}  ${notoSansArmenian.variable}`}
     >
-      <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider messages={messages}>
-          <QueryProvider>{children}</QueryProvider>
-        </NextIntlClientProvider>
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
