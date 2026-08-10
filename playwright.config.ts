@@ -40,12 +40,10 @@ export default defineConfig({
     },
   ],
 
-  /* Uncomment to start the server automatically before running tests:
   webServer: {
-    command: "npm run start",
+    command: "npm run dev",
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
-  */
 });

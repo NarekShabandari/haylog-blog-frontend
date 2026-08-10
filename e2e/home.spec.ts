@@ -16,8 +16,8 @@ test.describe("Home page", () => {
   test("shows the site header with logo", async ({ page }) => {
     const header = page.getByRole("banner");
     await expect(header).toBeVisible();
-    await expect(header.getByText("Call")).toBeVisible();
-    await expect(header.getByText("Stack")).toBeVisible();
+    // Logo renders as "hay.log" (hay + dot span + log)
+    await expect(header.getByRole("link", { name: /hay/i }).first()).toBeVisible();
   });
 
   test("header contains Blog and About navigation links", async ({ page }) => {

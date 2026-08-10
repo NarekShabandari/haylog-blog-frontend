@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { LanguageSwitcher } from "../ui/languageSwitch";
+import Logo from "../ui/logo";
 import { ThemeToggle } from "../ui/themeToggle";
 
 export function Header() {
@@ -9,17 +10,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-(--border) bg-(--surface)/80 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
-        <Link
-          href="/"
-          className="text-lg font-bold tracking-tight text-(--text)"
-        >
-          <span className="text-(--accent)">Call</span> Stack
-        </Link>
+        <Logo />
 
         <nav className="hidden md:flex items-center gap-6">
           {[
             { href: "/", label: t("blog") },
             { href: "/about", label: t("about") },
+            { href: "/login", label: t("login") },
           ].map(({ href, label }) => (
             <Link
               key={href}

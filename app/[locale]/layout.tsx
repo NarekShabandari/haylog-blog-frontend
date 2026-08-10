@@ -1,7 +1,7 @@
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { routing } from "@/i18n/routing";
-import { QueryProvider } from "@/providers/QueryProvider";
+import { Providers } from "@/providers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -22,13 +22,13 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <QueryProvider>
+      <Providers>
         <div className="min-h-screen flex flex-col bg-(--bg)" lang={locale}>
           <Header />
           <div className="flex-1">{children}</div>
           <Footer />
         </div>
-      </QueryProvider>
+      </Providers>
     </NextIntlClientProvider>
   );
 }

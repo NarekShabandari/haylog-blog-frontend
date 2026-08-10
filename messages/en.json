@@ -1,5 +1,12 @@
 {
-  "nav": { "home": "Home", "blog": "Blog", "about": "About", "tags": "Tags" },
+  "nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "about": "About",
+    "tags": "Tags",
+    "login": "Login"
+  },
+  "login": {},
   "blog": { "readMore": "Read more", "minRead": "min read" },
   "about": {
     "tag": "About this blog",

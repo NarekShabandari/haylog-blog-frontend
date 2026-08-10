@@ -1,21 +1,32 @@
-import { render, screen } from "@testing-library/react";
 import { Header } from "@/components/layout/header";
+import { render, screen } from "@testing-library/react";
 
-// next-intl: provide translations inline
+// next-intl: provide translations and locale inline
 jest.mock("next-intl", () => ({
   useTranslations: (ns: string) => (key: string) => {
     const dict: Record<string, Record<string, string>> = {
-      nav: { blog: "Blog", about: "About", home: "Home", tags: "Tags" },
+      nav: { blog: "Blog", about: "About", home: "Home", tags: "Tags", login: "Login" },
     };
     return dict[ns]?.[key] ?? key;
   },
+  useLocale: () => "en",
 }));
 
 // next/link renders a plain <a> in tests
 jest.mock("next/link", () => ({
   __esModule: true,
-  default: ({ href, children, ...rest }: { href: string; children: React.ReactNode; [key: string]: unknown }) => (
-    <a href={href} {...rest}>{children}</a>
+  default: ({
+    href,
+    children,
+    ...rest
+  }: {
+    href: string;
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => (
+    <a href={href} {...rest}>
+      {children}
+    </a>
   ),
 }));
 
@@ -28,26 +39,44 @@ jest.mock("@/components/ui/themeToggle", () => ({
 }));
 
 describe("Header", () => {
-  it("renders the site logo text", () => {
+  it("renders the site logo link", () => {
     render(<Header />);
-    expect(screen.getByText("Stack")).toBeInTheDocument();
-    expect(screen.getByText("Call")).toBeInTheDocument();
+    // Logo link accessible name is "hay . log" (dot is in a child <span>)
+    const logoLink = screen.getByRole("link", { name: /hay/i });
+    expect(logoLink).toBeInTheDocument();
+    expect(logoLink).toHaveAttribute("href", "/en");
+    expect(logoLink.textContent).toMatch(/hay.*log/);
   });
 
   it("renders nav links for Blog and About", () => {
     render(<Header />);
     expect(screen.getByRole("link", { name: "Blog" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "About" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
   });
 
   it("Blog link points to /", () => {
     render(<Header />);
-    expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute(
+      "href",
+      "/",
+    );
   });
 
   it("About link points to /about", () => {
     render(<Header />);
-    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute("href", "/about");
+    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(
+      "href",
+      "/about",
+    );
+  });
+
+  it("About link points to /about", () => {
+    render(<Header />);
+    expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute(
+      "href",
+      "/login",
+    );
   });
 
   it("renders the LanguageSwitcher", () => {

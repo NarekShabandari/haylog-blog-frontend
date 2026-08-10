@@ -101,9 +101,14 @@ test.describe("Blog post page", () => {
     await expect(page.getByRole("contentinfo")).toBeVisible();
   });
 
-  test("returns 404 for a non-existent slug", async ({ page }) => {
-    const response = await page.goto("/en/blog/this-post-does-not-exist-xyz");
-    // Next.js notFound() results in a 404
-    expect(response?.status()).toBe(404);
+  test("shows not-found UI for a non-existent slug", async ({ page }) => {
+    await page.goto("/en/blog/this-post-does-not-exist-xyz");
+    // In dev mode notFound() renders Next.js' not-found UI rather than sending
+    // a 404 HTTP status, so we check the page content instead.
+    await expect(
+      page.getByRole("heading", { name: /not found/i }).or(
+        page.getByText(/404/i)
+      )
+    ).toBeVisible({ timeout: 10_000 });
   });
 });
