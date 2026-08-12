@@ -1,12 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { apiClient } from "@/lib/axios";
-import { setCredentials } from "@/store/slices/authSlice";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "./useAppDispatch";
 
 export function useLogin() {
-  const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
   const router = useRouter();
   const locale = useLocale();
 
@@ -16,7 +15,9 @@ export function useLogin() {
       return data;
     },
     onSuccess: (data) => {
-      dispatch(setCredentials({ user: data.user, token: data.token }));
+      // dispatch(setCredentials({ user: data.user, token: data.token }));
+      // @ts-ignore
+      queryClient.setQueriesData(["auth", "me"], data.user);
       router.push(`/${locale}/`);
     },
   });

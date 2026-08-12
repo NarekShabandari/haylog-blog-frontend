@@ -1,7 +1,15 @@
 import { Header } from "@/components/layout/header";
 import { render, screen } from "@testing-library/react";
 
-// next-intl: provide translations and locale inline
+// ─── Mocks ───────────────────────────────────────────────────────────────────
+
+// Control isLoggedIn per test via this variable
+let mockIsLoggedIn = false;
+
+jest.mock("@/hooks/queries/useAuth", () => ({
+  useAuth: () => ({ isLoggedIn: mockIsLoggedIn }),
+}));
+
 jest.mock("next-intl", () => ({
   useTranslations: (ns: string) => (key: string) => {
     const dict: Record<string, Record<string, string>> = {
@@ -12,7 +20,6 @@ jest.mock("next-intl", () => ({
   useLocale: () => "en",
 }));
 
-// next/link renders a plain <a> in tests
 jest.mock("next/link", () => ({
   __esModule: true,
   default: ({
@@ -30,7 +37,6 @@ jest.mock("next/link", () => ({
   ),
 }));
 
-// Mock child UI components to keep Header tests focused
 jest.mock("@/components/ui/languageSwitch", () => ({
   LanguageSwitcher: () => <div data-testid="language-switcher" />,
 }));
@@ -38,45 +44,54 @@ jest.mock("@/components/ui/themeToggle", () => ({
   ThemeToggle: () => <div data-testid="theme-toggle" />,
 }));
 
-describe("Header", () => {
+// ─── Tests ────────────────────────────────────────────────────────────────────
+
+describe("Header — unauthenticated (isLoggedIn = false)", () => {
+  beforeEach(() => {
+    mockIsLoggedIn = false;
+  });
+
+  it("renders a <header> landmark", () => {
+    render(<Header />);
+    expect(screen.getByRole("banner")).toBeInTheDocument();
+  });
+
   it("renders the site logo link", () => {
     render(<Header />);
-    // Logo link accessible name is "hay . log" (dot is in a child <span>)
     const logoLink = screen.getByRole("link", { name: /hay/i });
     expect(logoLink).toBeInTheDocument();
     expect(logoLink).toHaveAttribute("href", "/en");
     expect(logoLink.textContent).toMatch(/hay.*log/);
   });
 
-  it("renders nav links for Blog and About", () => {
+  it("renders the Blog nav link", () => {
     render(<Header />);
     expect(screen.getByRole("link", { name: "Blog" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "About" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
   });
 
   it("Blog link points to /", () => {
     render(<Header />);
-    expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute(
-      "href",
-      "/",
-    );
+    expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute("href", "/");
+  });
+
+  it("renders the About nav link", () => {
+    render(<Header />);
+    expect(screen.getByRole("link", { name: "About" })).toBeInTheDocument();
   });
 
   it("About link points to /about", () => {
     render(<Header />);
-    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(
-      "href",
-      "/about",
-    );
+    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute("href", "/about");
   });
 
-  it("About link points to /about", () => {
+  it("renders the Login nav link when logged out", () => {
     render(<Header />);
-    expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute(
-      "href",
-      "/login",
-    );
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
+  });
+
+  it("Login link points to /login", () => {
+    render(<Header />);
+    expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute("href", "/login");
   });
 
   it("renders the LanguageSwitcher", () => {
@@ -88,9 +103,40 @@ describe("Header", () => {
     render(<Header />);
     expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
   });
+});
+
+describe("Header — authenticated (isLoggedIn = true)", () => {
+  beforeEach(() => {
+    mockIsLoggedIn = true;
+  });
 
   it("renders a <header> landmark", () => {
     render(<Header />);
     expect(screen.getByRole("banner")).toBeInTheDocument();
+  });
+
+  it("still renders the Blog nav link", () => {
+    render(<Header />);
+    expect(screen.getByRole("link", { name: "Blog" })).toBeInTheDocument();
+  });
+
+  it("still renders the About nav link", () => {
+    render(<Header />);
+    expect(screen.getByRole("link", { name: "About" })).toBeInTheDocument();
+  });
+
+  it("hides the Login nav link when logged in", () => {
+    render(<Header />);
+    expect(screen.queryByRole("link", { name: "Login" })).not.toBeInTheDocument();
+  });
+
+  it("still renders the LanguageSwitcher", () => {
+    render(<Header />);
+    expect(screen.getByTestId("language-switcher")).toBeInTheDocument();
+  });
+
+  it("still renders the ThemeToggle", () => {
+    render(<Header />);
+    expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
   });
 });

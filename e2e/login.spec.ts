@@ -142,3 +142,173 @@ test.describe("Login page (/hy/login)", () => {
     ).toBeVisible();
   });
 });
+
+test.describe("Login page — submit button disabled state", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/en/login");
+  });
+
+  test("Sign in button is disabled when both fields are empty", async ({ page }) => {
+    await expect(page.getByRole("button", { name: "Sign in" })).toBeDisabled();
+  });
+
+  test("Sign in button is disabled when only email is filled", async ({ page }) => {
+    await page.getByPlaceholder("you@example.com").fill("user@example.com");
+    await expect(page.getByRole("button", { name: "Sign in" })).toBeDisabled();
+  });
+
+  test("Sign in button is disabled when only password is filled", async ({ page }) => {
+    await page.getByPlaceholder("••••••••").fill("secret123");
+    await expect(page.getByRole("button", { name: "Sign in" })).toBeDisabled();
+  });
+
+  test("Sign in button is enabled once both fields are filled", async ({ page }) => {
+    await page.getByPlaceholder("you@example.com").fill("user@example.com");
+    await page.getByPlaceholder("••••••••").fill("secret123");
+    await expect(page.getByRole("button", { name: "Sign in" })).toBeEnabled();
+  });
+});
+
+test.describe("Login page — auth flow (network-intercepted)", () => {
+  /**
+   * These tests intercept the real API call so they work without a running
+   * backend. They use Playwright's route() to mock the POST /auth/login
+   * and GET /auth/me endpoints.
+   */
+
+  test("successful login redirects to the locale home page", async ({ page }) => {
+    // Mock a successful login response
+    await page.route("**/auth/login", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          user: { id: "u1", name: "Alice", email: "alice@example.com" },
+          token: "mock-jwt",
+        }),
+      })
+    );
+
+    await page.goto("/en/login");
+    await page.getByPlaceholder("you@example.com").fill("alice@example.com");
+    await page.getByPlaceholder("••••••••").fill("correctpassword");
+    await page.getByRole("button", { name: "Sign in" }).click();
+
+    // useLogin's onSuccess calls router.push(`/${locale}/`)
+    await expect(page).toHaveURL(/\/en\/?$/, { timeout: 10000 });
+  });
+
+  test("Login nav link is hidden in the header after successful login", async ({ page }) => {
+    // Mock both login and the subsequent /auth/me check
+    await page.route("**/auth/login", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          user: { id: "u1", name: "Alice", email: "alice@example.com" },
+          token: "mock-jwt",
+        }),
+      })
+    );
+    await page.route("**/auth/me", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          user: { id: "u1", name: "Alice", email: "alice@example.com" },
+        }),
+      })
+    );
+
+    await page.goto("/en/login");
+    await page.getByPlaceholder("you@example.com").fill("alice@example.com");
+    await page.getByPlaceholder("••••••••").fill("correctpassword");
+    await page.getByRole("button", { name: "Sign in" }).click();
+
+    // After redirect, the header should no longer show the Login link
+    await page.waitForURL(/\/en\/?$/, { timeout: 10000 });
+    await expect(
+      page.getByRole("navigation").getByRole("link", { name: "Login" })
+    ).not.toBeVisible();
+  });
+
+  test("invalid credentials shows the error banner", async ({ page }) => {
+    // Mock a 401 response with an API error message
+    await page.route("**/auth/login", (route) =>
+      route.fulfill({
+        status: 401,
+        contentType: "application/json",
+        body: JSON.stringify({ message: "Invalid email or password" }),
+      })
+    );
+
+    await page.goto("/en/login");
+    await page.getByPlaceholder("you@example.com").fill("wrong@example.com");
+    await page.getByPlaceholder("••••••••").fill("wrongpassword");
+    await page.getByRole("button", { name: "Sign in" }).click();
+
+    // Error banner should appear with the API message
+    await expect(
+      page.getByText("Invalid email or password")
+    ).toBeVisible({ timeout: 8000 });
+  });
+
+  test("error banner shows fallback text when API returns no message", async ({ page }) => {
+    await page.route("**/auth/login", (route) =>
+      route.fulfill({
+        status: 500,
+        contentType: "application/json",
+        body: JSON.stringify({}),
+      })
+    );
+
+    await page.goto("/en/login");
+    await page.getByPlaceholder("you@example.com").fill("user@example.com");
+    await page.getByPlaceholder("••••••••").fill("anypassword");
+    await page.getByRole("button", { name: "Sign in" }).click();
+
+    await expect(
+      page.getByText("Invalid credentials")
+    ).toBeVisible({ timeout: 8000 });
+  });
+
+  test("failed login does not navigate away from /en/login", async ({ page }) => {
+    await page.route("**/auth/login", (route) =>
+      route.fulfill({
+        status: 401,
+        contentType: "application/json",
+        body: JSON.stringify({ message: "Unauthorized" }),
+      })
+    );
+
+    await page.goto("/en/login");
+    await page.getByPlaceholder("you@example.com").fill("user@example.com");
+    await page.getByPlaceholder("••••••••").fill("wrongpassword");
+    await page.getByRole("button", { name: "Sign in" }).click();
+
+    // Should stay on the login page
+    await expect(page).toHaveURL(/\/en\/login/, { timeout: 8000 });
+  });
+
+  test("shows 'Signing in...' spinner while the request is in-flight", async ({ page }) => {
+    // Delay the response so the pending state is visible
+    await page.route("**/auth/login", async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          user: { id: "u1", name: "Alice", email: "alice@example.com" },
+          token: "mock-jwt",
+        }),
+      });
+    });
+
+    await page.goto("/en/login");
+    await page.getByPlaceholder("you@example.com").fill("alice@example.com");
+    await page.getByPlaceholder("••••••••").fill("correctpassword");
+    await page.getByRole("button", { name: "Sign in" }).click();
+
+    await expect(page.getByText(/signing in/i)).toBeVisible({ timeout: 3000 });
+  });
+});

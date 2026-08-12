@@ -1,3 +1,5 @@
+"use client";
+import { useAuth } from "@/hooks/queries/useAuth";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { LanguageSwitcher } from "../ui/languageSwitch";
@@ -6,6 +8,7 @@ import { ThemeToggle } from "../ui/themeToggle";
 
 export function Header() {
   const t = useTranslations("nav");
+  const { isLoggedIn } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-(--border) bg-(--surface)/80 backdrop-blur-md">
@@ -16,16 +19,17 @@ export function Header() {
           {[
             { href: "/", label: t("blog") },
             { href: "/about", label: t("about") },
-            { href: "/login", label: t("login") },
-          ].map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="text-sm font-medium text-(--muted) hover:text-(--text) transition-colors"
-            >
-              {label}
-            </Link>
-          ))}
+          ]
+            .concat(!isLoggedIn ? [{ href: "/login", label: t("login") }] : [])
+            .map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className="text-sm font-medium text-(--muted) hover:text-(--text) transition-colors"
+              >
+                {label}
+              </Link>
+            ))}
         </nav>
 
         <div className="flex items-center gap-2">
