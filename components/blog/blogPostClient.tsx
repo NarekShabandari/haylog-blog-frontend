@@ -71,7 +71,7 @@ export function BlogPostClient({ slug, locale }: Props) {
           </div>
         )}
 
-        {/* Markdown content — properly rendered */}
+        {/* Markdown content */}
         <div
           className="prose prose-lg max-w-none
             prose-headings:font-sans prose-headings:tracking-tight prose-headings:text-(--text)

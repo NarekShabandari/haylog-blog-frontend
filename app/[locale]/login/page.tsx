@@ -92,7 +92,6 @@ export default function LoginPage() {
           </div>
         </Card>
 
-        {/* Back to blog */}
         <p className="text-center font-mono text-xs text-(--muted) mt-6">
           <Link
             href={`/${locale}`}

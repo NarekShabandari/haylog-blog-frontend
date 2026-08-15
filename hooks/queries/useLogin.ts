@@ -15,7 +15,6 @@ export function useLogin() {
       return data;
     },
     onSuccess: (data) => {
-      // dispatch(setCredentials({ user: data.user, token: data.token }));
       // @ts-ignore
       queryClient.setQueriesData(["auth", "me"], data.user);
       router.push(`/${locale}/`);

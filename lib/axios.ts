@@ -6,7 +6,6 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
-// Auto-attach auth token if you have one
 apiClient.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("token");
@@ -15,7 +14,6 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Global error handling
 apiClient.interceptors.response.use(
   (res) => res,
   (error) => {
