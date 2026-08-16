@@ -8,8 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { Field } from "../blog/field";
-import { PublishedToggle } from "./publishedToggle";
+import Input from "../ui/input";
 import { SectionLabel } from "./sectionLabel";
 
 const inputClass = `
@@ -64,15 +63,18 @@ export function ManualForm() {
     <div className="space-y-5">
       {/* English */}
       <SectionLabel label="English" flag="🇬🇧" />
-      <Field label="Title *">
-        <input
-          value={form.title}
-          onChange={(e) => set("title", e.target.value)}
-          placeholder="My awesome post"
-          className={inputClass}
-        />
-      </Field>
-      <Field label="Content * (Markdown supported)">
+      <Input
+        label="Title *"
+        value={form.title}
+        onChange={(e) => set("title", e.target.value)}
+        placeholder="My awesome post"
+        className={inputClass}
+      />
+
+      <div className="flex flex-col gap-1">
+        <label className="font-mono text-[11px] font-bold tracking-widest uppercase text-(--muted)">
+          {"Content * (Markdown supported)"}
+        </label>
         <textarea
           value={form.content}
           onChange={(e) => set("content", e.target.value)}
@@ -80,32 +82,34 @@ export function ManualForm() {
           rows={8}
           className={`${inputClass} resize-y font-mono text-xs`}
         />
-      </Field>
-      <Field label="Meta Description">
-        <input
-          value={form.meta_description}
-          onChange={(e) => set("meta_description", e.target.value)}
-          placeholder="Short description for SEO"
-          className={inputClass}
-          maxLength={160}
-        />
-        <span className="font-mono text-[10px] text-(--muted) mt-1">
-          {form.meta_description.length}/160
-        </span>
-      </Field>
+      </div>
+      <Input
+        label="Meta Description"
+        onChange={(e) => set("meta_description", e.target.value)}
+        placeholder="Short description for SEO"
+        className={inputClass}
+        maxLength={160}
+        bottomComponent={
+          <span className="font-mono text-[10px] text-(--muted) mt-1">
+            {form.meta_description.length}/160
+          </span>
+        }
+      />
 
-      {/* Armenian */}
       <SectionLabel label="Armenian" flag="🇦🇲" />
-      <Field label="Վերնագիր">
-        <input
-          value={form.title_hy}
-          onChange={(e) => set("title_hy", e.target.value)}
-          placeholder="Իմ հոդվածը"
-          className={`${inputClass} font-armenian`}
-          lang="hy"
-        />
-      </Field>
-      <Field label="Բովանդակություն (Markdown)">
+
+      <Input
+        label="Վերնագիր"
+        value={form.title_hy}
+        onChange={(e) => set("title_hy", e.target.value)}
+        placeholder="Իմ հոդվածը"
+        className={`${inputClass} font-armenian`}
+        lang="hy"
+      />
+      <div className="flex flex-col gap-1">
+        <label className="font-mono text-[11px] font-bold tracking-widest uppercase text-(--muted)">
+          {"Բովանդակություն (Markdown)"}
+        </label>
         <textarea
           value={form.content_hy}
           onChange={(e) => set("content_hy", e.target.value)}
@@ -114,23 +118,27 @@ export function ManualForm() {
           className={`${inputClass} resize-y font-mono text-xs`}
           lang="hy"
         />
-      </Field>
-      <Field label="Մետա նկարագրություն">
-        <input
-          value={form.meta_description_hy}
-          onChange={(e) => set("meta_description_hy", e.target.value)}
-          placeholder="Կարճ նկարագրություն SEO-ի համար"
-          className={`${inputClass} font-armenian`}
-          lang="hy"
-          maxLength={160}
-        />
-        <span className="font-mono text-[10px] text-(--muted) mt-1">
-          {form.meta_description_hy.length}/160
-        </span>
-      </Field>
+      </div>
+      <Input
+        label="Մետա նկարագրություն"
+        value={form.meta_description_hy}
+        onChange={(e) => set("meta_description_hy", e.target.value)}
+        placeholder="Կարճ նկարագրություն SEO-ի համար"
+        className={`${inputClass} font-armenian`}
+        lang="hy"
+        maxLength={160}
+        bottomComponent={
+          <span className="font-mono text-[10px] text-(--muted) mt-1">
+            {form.meta_description_hy.length}/160
+          </span>
+        }
+      />
 
       {/* Tags */}
-      <Field label="Tags">
+      <div className="flex flex-col gap-1">
+        <label className="font-mono text-[11px] font-bold tracking-widest uppercase text-(--muted)">
+          {"Tags"}
+        </label>
         <div className="flex gap-2">
           <input
             value={tagInput}
@@ -161,15 +169,7 @@ export function ManualForm() {
             ))}
           </div>
         )}
-      </Field>
-
-      {/* Published toggle */}
-      <PublishedToggle
-        value={form.published}
-        onChange={(v) => set("published", v)}
-      />
-
-      {/* Feedback */}
+      </div>
       {isSuccess && (
         <div className="flex items-center gap-2 p-3 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm">
           <CheckCircle size={15} />
@@ -179,6 +179,7 @@ export function ManualForm() {
       {isError && (
         <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
           <AlertCircle size={15} />
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(error as any)?.response?.data?.message ?? "Failed to create post"}
         </div>
       )}

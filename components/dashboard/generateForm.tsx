@@ -1,8 +1,7 @@
 import { useGeneratePost } from "@/hooks/queries/useGeneratePost";
 import { AlertCircle, CheckCircle, Loader2, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { Field } from "../blog/field";
-import { PublishedToggle } from "./publishedToggle";
+import Input from "../ui/input";
 
 const inputClass = `
   w-full px-3 py-2.5 rounded-lg border border-[var(--border)]
@@ -48,61 +47,30 @@ export function GenerateForm() {
         </div>
       </div>
 
-      {/* Topic */}
-      <Field label="Topic *">
-        <input
-          value={form.topic}
-          onChange={(e) => set("topic", e.target.value)}
-          placeholder="Core Web Vitals Blueprint"
-          className={inputClass}
-        />
-      </Field>
-
-      {/* Target keyword */}
-      <Field label="Target Keyword *">
-        <input
-          value={form.targetKeyword}
-          onChange={(e) => set("targetKeyword", e.target.value)}
-          placeholder="Core Web Vitals"
-          className={inputClass}
-        />
-      </Field>
-
-      {/* Audience */}
-      <Field label="Audience">
-        <input
-          value={form.audience}
-          onChange={(e) => set("audience", e.target.value)}
-          placeholder="Web developers"
-          className={inputClass}
-        />
-      </Field>
-
-      {/* Tone */}
-      <Field label="Tone">
-        <select
-          value={form.tone}
-          onChange={(e) => set("tone", e.target.value)}
-          className={inputClass}
-        >
-          <option value="technical but approachable">
-            Technical but approachable
-          </option>
-          <option value="casual and friendly">Casual and friendly</option>
-          <option value="formal and professional">
-            Formal and professional
-          </option>
-          <option value="beginner friendly">Beginner friendly</option>
-        </select>
-      </Field>
-
-      {/* Published toggle */}
-      <PublishedToggle
-        value={form.published}
-        onChange={(v) => set("published", v)}
+      <Input
+        label="Topic *"
+        value={form.topic}
+        onChange={(e) => set("topic", e.target.value)}
+        placeholder="Core Web Vitals Blueprint"
+        className={inputClass}
       />
 
-      {/* Feedback */}
+      <Input
+        label="Target Keyword *"
+        value={form.targetKeyword}
+        onChange={(e) => set("targetKeyword", e.target.value)}
+        placeholder="Core Web Vitals"
+        className={inputClass}
+      />
+
+      <Input
+        label="Audience"
+        value={form.audience}
+        onChange={(e) => set("audience", e.target.value)}
+        placeholder="Web developers"
+        className={inputClass}
+      />
+
       {isSuccess && (
         <div className="flex items-center gap-2 p-3 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm">
           <CheckCircle size={15} />
@@ -112,6 +80,7 @@ export function GenerateForm() {
       {isError && (
         <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
           <AlertCircle size={15} />
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(error as any)?.response?.data?.message ?? "Failed to generate post"}
         </div>
       )}

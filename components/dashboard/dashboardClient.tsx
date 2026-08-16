@@ -3,11 +3,11 @@
 import { useAuth } from "@/hooks/queries/useAuth";
 import { PenLine, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { TabButton } from "../ui/tabButton";
 import { DashboardSkeleton } from "./dashboardSkeleton";
 import { GenerateForm } from "./generateForm";
 import { ManualForm } from "./manualForm";
 import { RecentPosts } from "./recentPosts";
-import { TabButton } from "./tabButton";
 
 type Tab = "generate" | "manual";
 
@@ -26,7 +26,7 @@ export function DashboardClient() {
           <span className="font-mono text-[10px] font-bold tracking-widest uppercase text-accent">
             Dashboard
           </span>
-          <h1 className="text-3xl font-bold tracking-tight text-text mt-1">
+          <h1 className="text-3xl font-bold tracking-tight text-muted mt-1 ">
             Post Manager
           </h1>
           <p className="text-sm text-muted mt-1">
@@ -45,6 +45,7 @@ export function DashboardClient() {
             onClick={() => setActiveTab("manual")}
             icon={<PenLine size={14} />}
             label="Write Manually"
+            deactive
           />
         </div>
         <div className="grid grid-cols1 lg:grid-cols-3 gap-8">

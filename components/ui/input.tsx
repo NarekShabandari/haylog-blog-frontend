@@ -15,6 +15,7 @@ interface InputProps extends DetailedHTMLProps<
   hasVisibilityToggle?: boolean;
   visible?: boolean;
   onVisibilityClick?: MouseEventHandler<HTMLButtonElement>;
+  bottomComponent?: ReactNode;
 }
 
 export default function Input({
@@ -23,6 +24,7 @@ export default function Input({
   hasVisibilityToggle = false,
   visible = false,
   onVisibilityClick,
+  bottomComponent,
   ...rest
 }: InputProps) {
   return (
@@ -48,6 +50,7 @@ export default function Input({
           </button>
         )}
       </div>
+      {bottomComponent}
     </div>
   );
 }
