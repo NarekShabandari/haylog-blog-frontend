@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/hooks/queries/useAuth";
 import { PenLine, Sparkles } from "lucide-react";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 import { TabButton } from "../ui/tabButton";
 import { DashboardSkeleton } from "./dashboardSkeleton";
@@ -15,9 +16,9 @@ export function DashboardClient() {
   const { isLoggedIn, isLoading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("generate");
   if (authLoading) return <DashboardSkeleton />;
-  //   if (!isLoggedIn) {
-  //     redirect("/en/login");
-  //   }
+  if (!isLoggedIn) {
+    redirect("/en/login");
+  }
 
   return (
     <div className="min-h-screen bg-(--bg)">

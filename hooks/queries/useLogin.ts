@@ -17,7 +17,7 @@ export function useLogin() {
     onSuccess: (data) => {
       // @ts-ignore
       queryClient.setQueriesData(["auth", "me"], data.user);
-      router.push(`/${locale}/`);
+      router.push(`/${locale}/dashboard`);
     },
   });
 }
