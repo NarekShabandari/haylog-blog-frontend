@@ -7,6 +7,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https" as const,
+        hostname: "image.pollinations.ai",
+      },
+      {
+        protocol: "https" as const,
         hostname: "res.cloudinary.com",
         pathname: "/**",
       },
